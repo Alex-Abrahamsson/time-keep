@@ -6,7 +6,7 @@
     align-items: center;
     justify-items: center;
     justify-content: center;
-    height: 5%;
+    height: 10%;
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -16,9 +16,10 @@
 
 .footerContent {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     justify-self: center;
     width: 95%;
-    height: 95%;sisab
+    height: 95%;
 }

@@ -1,0 +1,29 @@
+@use '../../../styles/variables.scss' as v;
+
+.rightSideContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    min-height: 100vh;
+    width: 100%;
+    border: 1px solid red;
+}
+.rightSideContainerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid gray;
+}
+.rightSideContainerBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+    width: 100%;
+    height: calc(100vh - 50px);
+}
