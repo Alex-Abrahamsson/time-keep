@@ -8,4 +8,6 @@ export type AssignmentType = {
     date: string;
     description: string;
     time: string;
+    startTime?: Date | null;
+    endTime?: Date | null;
 };

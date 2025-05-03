@@ -9,7 +9,13 @@ interface TicketButtonProps {
 
 export default function TicketButton({ text, onClick, color }: TicketButtonProps) {
     return (
-        <button className={Style.ticketButton} onClick={onClick} style={{ backgroundColor: color }}>
+        <button
+            className={Style.ticketButton}
+            onClick={() => {
+                onClick();
+            }}
+            style={{ backgroundColor: color }}
+        >
             {text}
         </button>
     );
