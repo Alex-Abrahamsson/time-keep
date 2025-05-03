@@ -1,22 +1,28 @@
 import React from "react";
 import Style from "./assignments.module.scss";
+import { AssignmentType } from "@/types/types";
+import ColorDot from "../colorDot/colorDot";
 
-interface Assignment {
-    id: number;
-    costumer: string;
-    ticketName: string;
-    status: string;
-    date: string;
-    description: string;
-    time: string;
+interface AssignmentsProps {
+    assignment: AssignmentType;
 }
 
-export default function Assignments( {assignment}: {assignment: Assignment}) {
+export default function Assignments( {assignment}: AssignmentsProps) {
 
     return (
         <div className={Style.assignmentsContainer}>
-            <h4 className={Style.assignmentsHeader}>{assignment.costumer}</h4>
+            <div className={Style.assignmentsHeader}>
+                <div className={Style.icon}></div>
+                <div className={Style.assignmentsHeaderText}>
+                    <h4>{assignment.costumer}</h4>
+                </div>
+                <div className={Style.dotContainer}>
+                    <ColorDot status={assignment.status} />
+                </div>
+            </div>
+            <div className={Style.assignmentsBody}>
             <p>{assignment.ticketName}</p>
+            </div>
         </div>
     );
 }
