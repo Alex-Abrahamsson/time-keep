@@ -11,3 +11,12 @@ export type AssignmentType = {
     startTime?: Date | null;
     endTime?: Date | null;
 };
+
+export type UserType = {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    createdAt: Date;
+}

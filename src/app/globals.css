@@ -7,7 +7,7 @@ body {
 }
 
 body {
-  background: #008507;
+  background: url('../assets/loginPage1.jpeg') no-repeat center center;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
