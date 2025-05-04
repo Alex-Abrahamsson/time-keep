@@ -28,18 +28,11 @@ export default function Home() {
     }
   };
 
-  const handleStartTimeClick = (assignmentId: number) => {
+  const handleStartTimeClick = () => {
     console.log("Start time clicked");
-    const updatedAssignments = assignments.map((assignment) => {
-      if (assignment.id === assignmentId) {
-        return { ...assignment, startTime: new Date() };
-      }
-      return assignment;
-    });
-    setActiveAssignment((prev) => ({ ...prev, startTime: new Date() }));
   };
 
-  const handlePauseTimeClick = (assignmentId: number) => {
+  const handlePauseTimeClick = () => {
     console.log("Pause time clicked");
   };
 
