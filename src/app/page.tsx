@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from "@/context/authContext";
 import React, { useEffect, useState } from "react";
 import ActiveAssignment from "./components/activeAssignment/activeAssignment";
 import Assignments from "./components/assignments/assignments";
@@ -7,69 +8,130 @@ import LeftSideContainer from "./components/leftSideContainer/leftSideContainer"
 import PageContainer from "./components/page/pageContainer";
 import RightSideContainer from "./components/rightSideContainer/rightSideContainer";
 import { useRouter } from "next/navigation";
-
-const assignments = [
-  { id: 1, costumer: "Sisab", ticketName: "TICKET-423", status: "Open", date: "2023-10-01", description: "Beskrivning 1", time: "10:00", startTime: null, endTime: null },
-  { id: 2, costumer: "Sisab", ticketName: "FASIT-321", status: "Closed", date: "2023-10-02", description: "Beskrivning 2", time: "11:00", startTime: null, endTime: null },
-  { id: 3, costumer: "Fabege", ticketName: "FAB-554", status: "Open", date: "2023-10-03", description: "Beskrivning 3", time: "12:00", startTime: null, endTime: null },
-  { id: 4, costumer: "Vasa", ticketName: "TICKET-21", status: "Paused", date: "2023-10-04", description: "Beskrivning 4", time: "13:00", startTime: null, endTime: null },
-  { id: 5, costumer: "Wallenberg", ticketName: "TICKET-542", status: "Open", date: "2023-10-05", description: "Beskrivning 5", time: "14:00", startTime: null, endTime: null },
-  { id: 6, costumer: "Alleima", ticketName: "ALL-65", status: "Closed", date: "2023-10-06", description: "Beskrivning 6", time: "15:00", startTime: null, endTime: null },
-  { id: 7, costumer: "Stockholmshem", ticketName: "STH-132", status: "Open", date: "2023-10-07", description: "Beskrivning 7", time: "16:00", startTime: null, endTime: null },
-  { id: 8, costumer: "Balder", ticketName: "TICKET-664", status: "Closed", date: "2023-10-08", description: "Beskrivning 8", time: "17:00", startTime: null, endTime: null },
-];
+import { AssignmentSession, AssignmentType } from "@/types/types";
+import { collection, doc, getDocs, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default function Home() {
+  const { user } = useAuth();
   const router = useRouter();
+
+  const [assignments, setAssignments] = useState<AssignmentType[]>([]);
+  const [activeAssignment, setActiveAssignment] = useState<AssignmentType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeAssignment, setActiveAssignment] = useState(assignments[0]);
 
   useEffect(() => {
-    // Kontrollera om användaren är inloggad (exempel: kontrollera en token i localStorage)
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsAuthenticated(true);
     } else {
-      router.push("/login"); // Omdirigera till inloggningssidan om inte inloggad
+      router.push("/login");
     }
   }, [router]);
 
-  if (!isAuthenticated) {
-    return null; // Visa inget medan omdirigeringen sker
-  }
+  // ✅ Hämtar uppdrag när användaren finns
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchAssignments = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, user.uid));
+        const fetchedAssignments: AssignmentType[] = [];
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          fetchedAssignments.push({
+            Id: Number(data.Id),
+            UserId: data.UserId,
+            Costumer: data.Costumer,
+            TicketName: data.TicketName,
+            Status: data.Status,
+            Date: data.Date,
+            Description: data.Description,
+            Time: data.Time,
+            Sessions: (data.Sessions || []).map((s: AssignmentSession) => ({
+              Start: s.Start,
+              End: s.End ?? null,
+            })),
+          });
+        });
+
+        setAssignments(fetchedAssignments);
+        if (fetchedAssignments.length > 0) {
+          setActiveAssignment(fetchedAssignments[0]);
+        }
+      } catch (error) {
+        console.error("Fel vid hämtning av uppdrag:", error);
+      }
+    };
+
+    fetchAssignments();
+  }, [user]);
+
+  // 🛑 Viktigt: Stoppa rendering om inte inloggad
+  if (!isAuthenticated || !user) return null;
 
   const handleCardClick = (assignmentId: number) => {
-    const selectedAssignment = assignments.find((assignment) => assignment.id === assignmentId);
-    if (selectedAssignment) {
-      setActiveAssignment(selectedAssignment);
+    const selectedAssignment = assignments.find((a) => a.Id === assignmentId);
+    if (selectedAssignment) setActiveAssignment(selectedAssignment);
+  };
+
+  const handleStartTimeClick = async (assignment: AssignmentType) => {
+    const assignmentRef = doc(db, assignment.UserId, assignment.Id.toString());
+    const now = new Date().toISOString();
+
+    try {
+      await updateDoc(assignmentRef, {
+        Sessions: arrayUnion({ Start: now, End: null }),
+        Status: "Active",
+      });
+    } catch (error) {
+      console.error("Kunde inte starta session:", error);
     }
   };
 
-  const handleStartTimeClick = () => {
-    console.log("Start time clicked");
-  };
+  const handlePauseTimeClick = async (assignment: AssignmentType) => {
+    const assignmentRef = doc(db, assignment.UserId, assignment.Id.toString());
 
-  const handlePauseTimeClick = () => {
-    console.log("Pause time clicked");
+    try {
+      const snapshot = await getDoc(assignmentRef);
+      if (!snapshot.exists()) return;
+
+      const data = snapshot.data() as AssignmentType;
+      const sessions = data.Sessions || [];
+
+      const updatedSessions = sessions.map((s, i, arr) =>
+        i === arr.length - 1 && !s.End ? { ...s, End: new Date().toISOString() } : s
+      );
+
+      await updateDoc(assignmentRef, {
+        Sessions: updatedSessions,
+        Status: "Paused",
+      });
+    } catch (error) {
+      console.error("Kunde inte pausa session:", error);
+    }
   };
 
   return (
     <PageContainer>
-      <LeftSideContainer headerText="Uppdrag">
+      <LeftSideContainer user={user} headerText="Uppdrag">
         {assignments.map((assignment) => (
           <Assignments
-            key={assignment.id}
+            key={assignment.Id}
             assignment={assignment}
-            cardClick={() => handleCardClick(assignment.id)}
+            cardClick={() => handleCardClick(assignment.Id)}
           />
         ))}
       </LeftSideContainer>
       <RightSideContainer headerText="Aktiv">
-        <ActiveAssignment
-          assignment={activeAssignment}
-          startTimeClick={handleStartTimeClick} // Pass directly
-          pauseTimeClick={handlePauseTimeClick} // Pass directly
-        />
+        {activeAssignment && (
+          <ActiveAssignment
+            assignment={activeAssignment}
+            onStart={() => handleStartTimeClick(activeAssignment)}
+            onPause={() => handlePauseTimeClick(activeAssignment)}
+          />
+        )}
       </RightSideContainer>
     </PageContainer>
   );

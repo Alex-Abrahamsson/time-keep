@@ -16,14 +16,14 @@ export default function Assignments({ assignment, cardClick }: AssignmentsProps)
       <div className={Style.assignmentsHeader}>
         <div className={Style.icon}></div>
         <div className={Style.assignmentsHeaderText}>
-          <h4>{assignment.ticketName}</h4>
+          <h4>{assignment.TicketName}</h4>
         </div>
         <div className={Style.dotContainer}>
-          <ColorDot status={assignment.status} />
+          <ColorDot status={assignment.Status} />
         </div>
       </div>
       <div className={Style.assignmentsBody}>
-        <p>{assignment.costumer}</p>
+        <p>{assignment.Costumer}</p>
       </div>
     </div>
   );

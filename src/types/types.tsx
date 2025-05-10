@@ -1,22 +1,27 @@
 
 
-export type AssignmentType = {
-    id: number;
-    costumer: string;
-    ticketName: string;
-    status: string;
-    date: string;
-    description: string;
-    time: string;
-    startTime?: Date | null;
-    endTime?: Date | null;
-};
+export type AssignmentSession = {
+    Start: Date;
+    End?: Date | null;
+  };
+  
+  export type AssignmentType = {
+    Id: number;
+    UserId: string;
+    Costumer: string;
+    TicketName: string;
+    Status: string;
+    Date: string;
+    Description: string;
+    Time: string;
+    Sessions: AssignmentSession[];
+  };
 
 export type UserType = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    createdAt: Date;
+    Id: string;
+    Name: string;
+    Email: string;
+    Password: string;
+    Role: string;
+    CreatedAt: Date;
 }

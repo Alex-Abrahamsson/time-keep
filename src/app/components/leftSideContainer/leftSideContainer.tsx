@@ -3,13 +3,15 @@
 import React, { useState } from 'react';
 import Style from './leftSideContainer.module.scss';
 import AddAssignmentModal from '@/app/modals/addAssignment/addAssignmentModal';
+import { User } from '@/context/authContext';
 
 interface LeftSideContainerProps {
     headerText: string;
     children: React.ReactNode;
+    user: User;
 }
 
-export default function LeftSideContainer({ headerText, children }: LeftSideContainerProps) {
+export default function LeftSideContainer({ headerText, children, user }: LeftSideContainerProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
@@ -43,7 +45,7 @@ export default function LeftSideContainer({ headerText, children }: LeftSideCont
                 </button>
             </div>
             <div className={Style.leftSideContainerBody}>{children}</div>
-            {isModalOpen && <AddAssignmentModal onClose={closeModal}/>}
+            {isModalOpen && <AddAssignmentModal user={user} onClose={closeModal} />}
         </div>
     );
 }
