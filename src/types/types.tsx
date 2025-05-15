@@ -15,10 +15,11 @@ export type AssignmentSession = {
     Description: string;
     Time: string;
     Sessions: AssignmentSession[];
+    Category: string;
   };
 
 export type UserType = {
-    Id: string;
+    Id: number;
     Name: string;
     Email: string;
     Password: string;

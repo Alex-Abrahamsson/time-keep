@@ -12,7 +12,7 @@ interface AddAssignmentModalProps {
 
 export default function AddAssignmentModal({ onClose, user }: AddAssignmentModalProps) {
 
-  const [formData, setFormData] = useState<AssignmentType>({
+  const [formData, setFormData] = useState<AssignmentType & { Category: string }>({
     Id: Date.now(),
     UserId: user.uid,
     Costumer: '',
@@ -22,9 +22,10 @@ export default function AddAssignmentModal({ onClose, user }: AddAssignmentModal
     Description: '',
     Time: '00:00',
     Sessions: [],
+    Category: 'Bugg',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -64,6 +65,18 @@ export default function AddAssignmentModal({ onClose, user }: AddAssignmentModal
               required
               placeholder='Ticketnamn...'
             />
+          </div>
+          <div className={Style.inputRow}>
+            <select
+              name="Category"
+              value={formData.Category}
+              onChange={handleChange}
+              required
+            >
+              <option value="Bugg">Bugg</option>
+              <option value="Utveckling">Utveckling</option>
+              <option value="Konfiguration">Konfiguration</option>
+            </select>
           </div>
           <div className={Style.inputRow}>
             <textarea

@@ -8,24 +8,16 @@ import { db } from "../../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { UserType } from "@/types/types";
 import { useAuth } from "@/context/authContext";
+import NewUserModal from "../modals/newUserModal";
 
 export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (isDev: boolean) => {
-    if (isDev) {
-      login({
-        uid: "dev",
-        name: "Utvecklare",
-        email: "dev@example.com",
-        role: "admin",
-      });
-      router.push("/");
-      return;
-    }
+  const handleLogin = async () => {
 
     try {
       const usersRef = collection(db, "Users");
@@ -59,6 +51,14 @@ export default function Login() {
     }
   };
 
+  const handleRegisterUser = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
+
   return (
     <div className={Style.loginPage}>
       <div className={Style.loginCard}>
@@ -75,9 +75,12 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <TicketButton onClick={() => handleLogin(false)} color="white" text="Logga in" />
-        <TicketButton onClick={() => handleLogin(true)} color="red" text="dev" />
+        <TicketButton onClick={() => handleLogin()} color="white" text="Logga in" />
+        <div className={Style.registerLink}>
+          <p><a onClick={() => handleRegisterUser()}>Skapa konto</a></p>
+        </div>
       </div>
+      {isModalOpen && < NewUserModal onClose={closeModal} />}
     </div>
   );
 }

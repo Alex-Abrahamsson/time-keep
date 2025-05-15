@@ -1,25 +1,47 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Style from './leftSideContainer.module.scss';
 import AddAssignmentModal from '@/app/modals/addAssignment/addAssignmentModal';
 import { User } from '@/context/authContext';
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
+
 
 interface LeftSideContainerProps {
     headerText: string;
     children: React.ReactNode;
     user: User;
+    refreshAssignments: () => void;
 }
 
-export default function LeftSideContainer({ headerText, children, user }: LeftSideContainerProps) {
+export default function LeftSideContainer({ headerText, children, user, refreshAssignments }: LeftSideContainerProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { logout } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        // Update page when modal closes
+        if (!isModalOpen) {
+            // Perform any action when the modal is closed
+            console.log("Modal closed");
+        }
+    }
+    , [isModalOpen]);
+
+    const handleLogout = () => {
+    logout();
+    router.push("/login");
+    };
+
 
     const openModal = () => {
         setIsModalOpen(true); // Visa modalen
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false); // Stäng modalen
+    const closeModalAndRefresh = () => {
+    setIsModalOpen(false);
+    refreshAssignments();
     };
 
     return (
@@ -44,8 +66,15 @@ export default function LeftSideContainer({ headerText, children, user }: LeftSi
                     </svg>
                 </button>
             </div>
-            <div className={Style.leftSideContainerBody}>{children}</div>
-            {isModalOpen && <AddAssignmentModal user={user} onClose={closeModal} />}
+            <div className={Style.leftSideContainerBody}>
+                {children}
+            </div>
+            <div className={Style.leftSideContainerFooter}>
+                <button className={Style.leftSideLogoutButton} onClick={handleLogout}>
+                    Logga ut
+                </button>
+            </div>
+            {isModalOpen && <AddAssignmentModal user={user} onClose={closeModalAndRefresh} />}
         </div>
     );
 }

@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-items: center;
-    min-height: 100vh;
+    max-height: 100vh;
     width: 100%;
 }
 .rightSideContainerHeader {
@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 50px;
+    height: 5vh;
     border-bottom: 1px solid gray;
     color: white;
 }
@@ -25,5 +25,17 @@
     justify-items: center;
     text-align: center;
     width: 100%;
-    height: calc(100vh - 50px);
+    height: 90vh;
+}
+.rightSideContainerFooter
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+    height: 5vh;
+    border-top: 1px solid gray;
+    color: white;
 }

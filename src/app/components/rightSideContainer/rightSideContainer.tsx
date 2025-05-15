@@ -15,7 +15,11 @@ export default function RightSideContainer({
       <div className={Style.rightSideContainerHeader}>
         <h1>{headerText}</h1>
       </div>
-      <div className={Style.rightSideContainerBody}>{children}</div>
+      <div className={Style.rightSideContainerBody}>
+        {children}
+      </div>
+      <div className={Style.rightSideContainerFooter}>
+      </div>
     </div>
   );
 }
