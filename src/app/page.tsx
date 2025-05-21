@@ -72,7 +72,9 @@ export default function Home() {
 
   const handleCardClick = (assignmentId: number) => {
     const selectedAssignment = assignments.find((a) => a.Id === assignmentId);
-    if (selectedAssignment) setActiveAssignment(selectedAssignment);
+    if (selectedAssignment) {
+      setActiveAssignment(selectedAssignment);
+    }
   };
 
   const handleStartTimeClick = async (assignment: AssignmentType) => {

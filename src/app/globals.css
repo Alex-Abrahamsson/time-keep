@@ -9,7 +9,11 @@ body {
 }
 
 body {
-  background: url('../assets/loginPage1.jpeg') no-repeat center center;
+  background: url('../assets/loginPage1.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
