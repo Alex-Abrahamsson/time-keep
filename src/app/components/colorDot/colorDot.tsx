@@ -8,9 +8,9 @@ interface ColorDotProps {
 export default function ColorDot({ status }: ColorDotProps) {
     const getColor = () => {
         switch (status) {
-            case "Open":
+            case "Active":
                 return "green";
-            case "Closed":
+            case "Stopped":
                 return "red";
             case "Paused":
                 return "yellow";

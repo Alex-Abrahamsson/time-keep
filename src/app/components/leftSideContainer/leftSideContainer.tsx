@@ -6,13 +6,14 @@ import AddAssignmentModal from '@/app/modals/addAssignment/addAssignmentModal';
 import { User } from '@/context/authContext';
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
-
+import Assignments from '../assignments/assignments';
 
 interface LeftSideContainerProps {
     headerText: string;
-    children: React.ReactNode;
+    children: React.ReactElement<typeof Assignments>[] | null;
     user: User;
     refreshAssignments: () => void;
+    selectedAssignmentId?: number | null;
 }
 
 export default function LeftSideContainer({ headerText, children, user, refreshAssignments }: LeftSideContainerProps) {

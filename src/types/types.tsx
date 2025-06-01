@@ -1,11 +1,10 @@
-
-
 export type AssignmentSession = {
-    Start: Date;
-    End?: Date | null;
-  };
-  
-  export type AssignmentType = {
+    Start: string;
+    End?: string | null;
+    BillableTime?: number | null;
+};
+
+export type AssignmentType = {
     Id: number;
     UserId: string;
     Costumer: string;
@@ -13,10 +12,10 @@ export type AssignmentSession = {
     Status: string;
     Date: string;
     Description: string;
-    Time: string;
+    Time: number;
     Sessions: AssignmentSession[];
     Category: string;
-  };
+};
 
 export type UserType = {
     Id: number;
@@ -25,4 +24,4 @@ export type UserType = {
     Password: string;
     Role: string;
     CreatedAt: Date;
-}
+};
