@@ -12,12 +12,14 @@ interface AssignmentsProps {
     assignment: AssignmentType;
     cardClick: (id: number) => void;
     selected?: boolean;
+    refreshAssignments?: () => void;
 }
 
 export default function Assignments({
     assignment,
     cardClick,
     selected,
+    refreshAssignments,
 }: AssignmentsProps) {
     const [localStatus, setLocalStatus] = useState(assignment.Status);
 
@@ -83,16 +85,19 @@ export default function Assignments({
                 }
             }
 
-            const totalActualTime = sessions.reduce((sum: number, s: AssignmentSession) => {
-                if (s.Start && s.End) {
-                    const start = new Date(s.Start);
-                    const end = new Date(s.End);
-                    const diffMs = end.getTime() - start.getTime();
-                    const diffMin = Math.ceil(diffMs / 60000);
-                    return sum + diffMin;
-                }
-                return sum;
-            }, 0);
+            const totalActualTime = sessions.reduce(
+                (sum: number, s: AssignmentSession) => {
+                    if (s.Start && s.End) {
+                        const start = new Date(s.Start);
+                        const end = new Date(s.End);
+                        const diffMs = end.getTime() - start.getTime();
+                        const diffMin = Math.ceil(diffMs / 60000);
+                        return sum + diffMin;
+                    }
+                    return sum;
+                },
+                0
+            );
 
             await updateDoc(assignmentRef, {
                 Sessions: sessions,
@@ -100,6 +105,7 @@ export default function Assignments({
                 Time: totalActualTime,
             });
             setLocalStatus('Stopped');
+            if (refreshAssignments) refreshAssignments();
         } catch (error) {
             console.error('Kunde inte stoppa session:', error);
         }

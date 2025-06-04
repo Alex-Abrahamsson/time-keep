@@ -30,38 +30,47 @@ export default function Home() {
   }, [router]);
 
   const fetchAssignments = async () => {
-    if (!user) return;
-    try {
-      const querySnapshot = await getDocs(collection(db, user.uid));
-      const fetchedAssignments: AssignmentType[] = [];
+      if (!user) return;
+      try {
+          const querySnapshot = await getDocs(collection(db, user.uid));
+          const fetchedAssignments: AssignmentType[] = [];
 
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        fetchedAssignments.push({
-          Id: Number(data.Id),
-          UserId: data.UserId,
-          Costumer: data.Costumer,
-          TicketName: data.TicketName,
-          Status: data.Status,
-          Date: data.Date,
-          Description: data.Description,
-          Time: data.Time,
-          Sessions: (data.Sessions || []).map((s: AssignmentSession) => ({
-            Start: s.Start,
-            End: s.End ?? null,
-            BillableTime: s.BillableTime ?? null,
-          })),
-          Category: data.Category,
-        });
-      });
+          querySnapshot.forEach((docSnap) => {
+              const data = docSnap.data();
+              fetchedAssignments.push({
+                  Id: Number(data.Id),
+                  UserId: data.UserId,
+                  Costumer: data.Costumer,
+                  TicketName: data.TicketName,
+                  Status: data.Status,
+                  CreatedDate: data.Date,
+                  Description: data.Description,
+                  ActualTime: data.Time,
+                  Sessions: (data.Sessions || []).map(
+                      (s: AssignmentSession) => ({
+                          Start: s.Start,
+                          End: s.End ?? null,
+                          BillableTime: s.BillableTime ?? null,
+                      })
+                  ),
+                  Category: data.Category,
+              });
+          });
 
-      setAssignments(fetchedAssignments);
-      if (fetchedAssignments.length > 0) {
-        setActiveAssignment(fetchedAssignments[0]);
+          setAssignments(fetchedAssignments);
+
+          // Uppdatera activeAssignment om den finns i nya listan
+          if (activeAssignment) {
+              const updatedActive = fetchedAssignments.find(
+                  (a) => a.Id === activeAssignment.Id
+              );
+              setActiveAssignment(updatedActive || null);
+          } else if (fetchedAssignments.length > 0) {
+              setActiveAssignment(fetchedAssignments[0]);
+          }
+      } catch (error) {
+          console.error('Fel vid hämtning av uppdrag:', error);
       }
-    } catch (error) {
-      console.error("Fel vid hämtning av uppdrag:", error);
-    }
   };
 
   useEffect(() => {
@@ -79,28 +88,27 @@ export default function Home() {
   };
 
   return (
-    <PageContainer>
-      <LeftSideContainer 
-        user={user} 
-        headerText="Uppdrag"
-        refreshAssignments={fetchAssignments}
-      >
-        {assignments.map((assignment) => (
-          <Assignments
-            key={assignment.Id}
-            assignment={assignment}
-            cardClick={handleCardClick}
-            selected={activeAssignment?.Id === assignment.Id}
-          />
-        ))}
-      </LeftSideContainer>
-      <RightSideContainer headerText="Aktiv">
-        {activeAssignment && (
-          <ActiveAssignment
-            assignment={activeAssignment}
-          />
-        )}
-      </RightSideContainer>
-    </PageContainer>
+      <PageContainer>
+          <LeftSideContainer
+              user={user}
+              headerText='Uppdrag'
+              refreshAssignments={fetchAssignments}
+          >
+              {assignments.map((assignment) => (
+                  <Assignments
+                      key={assignment.Id}
+                      assignment={assignment}
+                      cardClick={handleCardClick}
+                      selected={activeAssignment?.Id === assignment.Id}
+                      refreshAssignments={fetchAssignments}
+                  />
+              ))}
+          </LeftSideContainer>
+          <RightSideContainer headerText='Aktiv' assignment={assignments}>
+              {activeAssignment && (
+                  <ActiveAssignment assignment={activeAssignment} />
+              )}
+          </RightSideContainer>
+      </PageContainer>
   );
 }

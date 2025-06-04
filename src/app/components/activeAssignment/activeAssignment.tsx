@@ -32,12 +32,12 @@ export default function ActiveAssignment({
           <p><b>Beskrivning: </b>{assignment.Description}</p>
           <p><b>Senaste start: </b>{latestSession?.Start ? new Date(latestSession.Start).toLocaleString() : "00:00:00"}</p>
           <p><b>Senaste paus: </b>{latestSession?.End ? new Date(latestSession.End).toLocaleString() : "00:00:00"}</p>
-          <p><b>Senaste Debiterbar tid: </b>{latestSession?.BillableTime ?? "0"}</p>
+          <p><b>Senaste Debiterbar tid: </b>{latestSession?.BillableTime ?? "0"} min</p>
         </div>
       </div>
       <div className={Style.activeAssignmentButtons}>
         <p className={Style.activeAssignmentTotalTime}>
-          <b>Faktisk tid: </b>{assignment.Time ?? 0} min
+          <b>Faktisk tid: </b>{assignment.ActualTime ?? 0} min
         </p>
         <p className={Style.activeAssignmentTotalTime}>
           <b>Debiterbar tid: </b> {totalBillableTime} min

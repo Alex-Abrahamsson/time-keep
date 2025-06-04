@@ -35,9 +35,9 @@ export default function AddAssignmentModal({
         Costumer: '',
         TicketName: '',
         Status: 'Paused',
-        Date: new Date().toISOString().split('T')[0],
+        CreatedDate: new Date().toISOString().split('T')[0],
         Description: '',
-        Time: 0,
+        ActualTime: 0,
         Sessions: [],
         Category: 'Bugg',
     });

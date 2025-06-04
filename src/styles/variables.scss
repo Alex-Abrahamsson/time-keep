@@ -6,7 +6,11 @@ $background-color: #b4b4b4;
 $success-color: #28a745;
 $error-color: #dc3545;
 $warning-color: #ffc107;
+$border-color: #b3b3b3;
 
+// Kritvit och pappersvit
+$white-paper: #f9f9f9;
+$white-pure: #ffffff;
 
 :export {
   primary-color: $primary-color;
@@ -15,4 +19,6 @@ $warning-color: #ffc107;
   success-color: $success-color;
   error-color: $error-color;
   warning-color: $warning-color;
+  white-paper: $white-paper;
+  white-pure: $white-pure;
 }

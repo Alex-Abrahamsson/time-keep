@@ -6,10 +6,10 @@
     align-items: center;
     justify-items: center;
     height: 50px;
-    width: 95%;
+    width: 90%;
     padding: 4px;
     margin: 4px 0 4px 0;
-    background-color: gray;
+    background-color: v.$border-color;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     border-radius: 8px;
@@ -31,7 +31,7 @@
 .selected,
 .selected:hover {
     border: 3px solid lime;
-    background-color: #fff;
+    background-color: v.$white-paper;
     height: 100px;
     box-shadow: 0 0 16px 0 lime;
     transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -148,7 +148,7 @@
 
 .StopButton {
     background: #ffeaea;
-    color: #d32f2f;
+    color: v.$error-color;
 }
 .StopButton:hover {
     background: #ffcccc;
@@ -157,7 +157,7 @@
 
 .PauseButton {
     background: #fffbe6;
-    color: #fbc02d;
+    color: v.$warning-color;
 }
 .PauseButton:hover {
     background: #fff3c0;
@@ -166,7 +166,7 @@
 
 .StartButton {
     background: #eaffea;
-    color: #388e3c;
+    color: v.$success-color;
 }
 .StartButton:hover {
     background: #c8f7c5;

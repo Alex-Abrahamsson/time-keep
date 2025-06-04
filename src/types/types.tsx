@@ -10,9 +10,9 @@ export type AssignmentType = {
     Costumer: string;
     TicketName: string;
     Status: string;
-    Date: string;
+    CreatedDate: string;
     Description: string;
-    Time: number;
+    ActualTime: number;
     Sessions: AssignmentSession[];
     Category: string;
 };
