@@ -1,0 +1,43 @@
+@use '../../../styles/variables.scss' as v;
+
+.rightSideRightContainerBodyContent {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: v.$white-paper;
+
+    .weekGrid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
+        margin-top: 8px;
+        width: 95%;
+    }
+
+    .weekGridCell {
+        background: #fff;
+        border: 1px solid v.$border-color;
+        padding: 8px 4px;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .customerHeader {
+        grid-column: 1 / -1;
+        margin-top: 1.5em;
+        font-size: 1.1em;
+    }
+
+    .summaryRow {
+        position: sticky;
+        bottom: 0;
+        background: #fafafa;
+        z-index: 2;
+        box-shadow: 0 -2px 8px -4px #0001;
+    }
+}
