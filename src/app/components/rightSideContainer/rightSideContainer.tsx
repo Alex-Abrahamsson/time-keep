@@ -22,25 +22,23 @@ export default function RightSideContainer({
                 <h1>{headerText}</h1>
             </div>
             <div className={Style.rightSideContainerBody}>
-                <div className={Style.rightSideLeftContainerBodyHeader}>
+                <div className={Style.rightSideLeftContainerBody}>
                     {children}
                 </div>
                 <div
-                    className={Style.rightSideRightContainerBodyHeader}
-                    style={{
-                        position: 'relative',
-                        width: '50%',
-                        height: '100%',
-                    }}
+                    className={
+                        isExpanded
+                            ? Style.rightSideRightContainerBody
+                            : Style.rightSideRightContainerBodyCollapsed
+                    }
                 >
                     <button
                         className={Style.toggleButton}
                         onClick={() => setIsExpanded((prev) => !prev)}
-                        aria-label={
-                            isExpanded ? 'Dölj tidrapport' : 'Visa tidrapport'
-                        }
                     >
-                        {isExpanded ? 'Dölj tidrapport' : 'Visa tidrapport'}
+                        {isExpanded
+                            ? 'D\nö\nl\nj'
+                            : 'V\ni\ns\na'}
                     </button>
                     {isExpanded && <TimeSheet assignment={assignment} />}
                 </div>

@@ -24,10 +24,7 @@ export default function TimeSheet({ assignment }: ITimeSHeet) {
     }
 
     return (
-        <div
-            className={Style.rightSideRightContainerBodyContent}
-        >
-            {/* Rubrikrad med datum */}
+        <div className={Style.rightSideRightContainerBodyContent}>
             <div className={Style.weekGrid}>
                 <div className={Style.weekGridCell}></div>
                 {last7Days.map((date, idx) => (
@@ -37,66 +34,85 @@ export default function TimeSheet({ assignment }: ITimeSHeet) {
                 ))}
             </div>
             {/* En sektion per kund */}
-            {Object.entries(grouped).map(([customer, assignments]) => (
-                <React.Fragment key={customer}>
-                    <div className={Style.customerHeader}>
-                        <b>{customer}</b>
-                    </div>
-                    {CATEGORIES.map((category) => {
-                        // Kolla om det finns någon BillableTime för denna kategori och kund under de senaste 7 dagarna
-                        const hasBillable = last7Days.some((date) =>
-                            assignments
-                                .filter((a) => a.Category === category)
-                                .flatMap((a) => a.Sessions)
-                                .some(
-                                    (s) =>
-                                        s.BillableTime &&
-                                        s.Start &&
-                                        s.Start.startsWith(date)
-                                )
-                        );
-                        if (!hasBillable) return null;
+            {Object.entries(grouped).map(([customer, assignments]) => {
+                // Visa endast kundheader om någon kategori har BillableTime senaste 7 dagarna
+                const hasAnyCategory = CATEGORIES.some((category) =>
+                    last7Days.some((date) =>
+                        assignments
+                            .filter((a) => a.Category === category)
+                            .flatMap((a) => a.Sessions)
+                            .some(
+                                (s) =>
+                                    s.BillableTime &&
+                                    s.Start &&
+                                    s.Start.startsWith(date)
+                            )
+                    )
+                );
+                if (!hasAnyCategory) return null;
 
-                        return (
-                            <div key={category} className={Style.weekGrid}>
-                                <div className={Style.weekGridCell}>
-                                    <Image
-                                        width={20}
-                                        height={20}
-                                        alt='none'
-                                        src={getIcon(category)}
-                                        unoptimized
-                                    />
-                                </div>
-                                {last7Days.map((date, idx) => {
-                                    const sum = assignments
-                                        .filter((a) => a.Category === category)
-                                        .flatMap((a) => a.Sessions)
-                                        .filter(
-                                            (s) =>
-                                                s.BillableTime &&
-                                                s.Start &&
-                                                s.Start.startsWith(date)
-                                        )
-                                        .reduce(
-                                            (acc, s) =>
-                                                acc + (s.BillableTime ?? 0),
-                                            0
+                return (
+                    <React.Fragment key={customer}>
+                        <div className={Style.customerHeader}>
+                            <b>{customer}</b>
+                        </div>
+                        {CATEGORIES.map((category) => {
+                            const hasBillable = last7Days.some((date) =>
+                                assignments
+                                    .filter((a) => a.Category === category)
+                                    .flatMap((a) => a.Sessions)
+                                    .some(
+                                        (s) =>
+                                            s.BillableTime &&
+                                            s.Start &&
+                                            s.Start.startsWith(date)
+                                    )
+                            );
+                            if (!hasBillable) return null;
+
+                            return (
+                                <div key={category} className={Style.weekGrid}>
+                                    <div className={Style.weekGridCell}>
+                                        <Image
+                                            width={20}
+                                            height={20}
+                                            alt='none'
+                                            src={getIcon(category)}
+                                            unoptimized
+                                        />
+                                    </div>
+                                    {last7Days.map((date, idx) => {
+                                        const sum = assignments
+                                            .filter(
+                                                (a) => a.Category === category
+                                            )
+                                            .flatMap((a) => a.Sessions)
+                                            .filter(
+                                                (s) =>
+                                                    s.BillableTime &&
+                                                    s.Start &&
+                                                    s.Start.startsWith(date)
+                                            )
+                                            .reduce(
+                                                (acc, s) =>
+                                                    acc + (s.BillableTime ?? 0),
+                                                0
+                                            );
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className={Style.weekGridCell}
+                                            >
+                                                {sum > 0 ? sum + ' min' : ''}
+                                            </div>
                                         );
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className={Style.weekGridCell}
-                                        >
-                                            {sum > 0 ? sum + ' min' : ''}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        );
-                    })}
-                </React.Fragment>
-            ))}
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </React.Fragment>
+                );
+            })}
             <div className={Style.weekGrid + ' ' + Style.summaryRow}>
                 <div className={Style.weekGridCell}>
                     <b>Totalt</b>
