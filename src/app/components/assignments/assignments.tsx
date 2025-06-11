@@ -13,6 +13,7 @@ interface AssignmentsProps {
     cardClick: (id: number) => void;
     selected?: boolean;
     refreshAssignments?: () => void;
+    expandTimeSheet: () => void;
 }
 
 export default function Assignments({
@@ -20,6 +21,7 @@ export default function Assignments({
     cardClick,
     selected,
     refreshAssignments,
+    expandTimeSheet,
 }: AssignmentsProps) {
     const [localStatus, setLocalStatus] = useState(assignment.Status);
 
@@ -57,6 +59,7 @@ export default function Assignments({
 
     const handleStop = async (e: React.MouseEvent) => {
         e.stopPropagation();
+        expandTimeSheet();
         const assignmentRef = doc(
             db,
             assignment.UserId,

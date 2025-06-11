@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Style from './rightSideContainer.module.scss';
 import { AssignmentType } from '@/types/types';
 import TimeSheet from '../timeSheet/timeSheet';
@@ -7,14 +7,25 @@ interface RightSideContainerProps {
     headerText: string;
     children: React.ReactNode;
     assignment: AssignmentType[];
+    shouldExpand: boolean;
 }
 
 export default function RightSideContainer({
     headerText,
     children,
     assignment,
+    shouldExpand,
 }: RightSideContainerProps) {
-    const [isExpanded, setIsExpanded] = useState(false); // Dold som standard
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    useEffect(() => {
+        // If shouldExpand is true, expand the right side container
+        if (shouldExpand) {
+            setIsExpanded(true);
+        } else {
+            setIsExpanded(false);
+        }
+    }, [shouldExpand]);
 
     return (
         <div className={Style.rightSideContainer}>

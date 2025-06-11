@@ -19,6 +19,7 @@ export default function Home() {
   const [assignments, setAssignments] = useState<AssignmentType[]>([]);
   const [activeAssignment, setActiveAssignment] = useState<AssignmentType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [shouldExpand, setShouldExpand] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -73,6 +74,13 @@ export default function Home() {
       }
   };
 
+    const handleExpandTimeSheet = () => {
+        setShouldExpand(true);
+        setTimeout(() => {
+            setShouldExpand(false);
+        }, 3000);
+    };
+
   useEffect(() => {
     fetchAssignments();
   }, [user]);
@@ -101,10 +109,11 @@ export default function Home() {
                       cardClick={handleCardClick}
                       selected={activeAssignment?.Id === assignment.Id}
                       refreshAssignments={fetchAssignments}
+                      expandTimeSheet={handleExpandTimeSheet}
                   />
               ))}
           </LeftSideContainer>
-          <RightSideContainer headerText='Aktiv' assignment={assignments}>
+          <RightSideContainer headerText='Aktiv' assignment={assignments} shouldExpand={shouldExpand}>
               {activeAssignment && (
                   <ActiveAssignment assignment={activeAssignment} />
               )}
