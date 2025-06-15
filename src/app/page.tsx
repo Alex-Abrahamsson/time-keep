@@ -11,10 +11,12 @@ import { useRouter } from 'next/navigation';
 import { AssignmentSession, AssignmentType } from '@/types/types';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
     const { user } = useAuth();
     const router = useRouter();
+    const [isMobile] = useIsMobile();
 
     const [assignments, setAssignments] = useState<AssignmentType[]>([]);
     const [activeAssignment, setActiveAssignment] =
@@ -97,33 +99,56 @@ export default function Home() {
         }
     };
 
-    return (
-        <PageContainer>
-            <LeftSideContainer
-                user={user}
-                headerText='Uppdrag'
-                refreshAssignments={fetchAssignments}
-            >
-                {assignments.map((assignment) => (
-                    <Assignments
-                        key={assignment.Id}
-                        assignment={assignment}
-                        cardClick={handleCardClick}
-                        selected={activeAssignment?.Id === assignment.Id}
-                        refreshAssignments={fetchAssignments}
-                        expandTimeSheet={handleExpandTimeSheet}
-                    />
-                ))}
-            </LeftSideContainer>
-            <RightSideContainer
-                headerText='Aktiv'
-                assignment={assignments}
-                shouldExpand={shouldExpand}
-            >
-                {activeAssignment && (
-                    <ActiveAssignment assignment={activeAssignment} />
-                )}
-            </RightSideContainer>
-        </PageContainer>
-    );
+    if (isMobile) {
+        return (
+            <PageContainer>
+                <LeftSideContainer
+                    user={user}
+                    headerText='Uppdrag'
+                    refreshAssignments={fetchAssignments}
+                >
+                    {assignments.map((assignment) => (
+                        <Assignments
+                            key={assignment.Id}
+                            assignment={assignment}
+                            cardClick={handleCardClick}
+                            selected={activeAssignment?.Id === assignment.Id}
+                            refreshAssignments={fetchAssignments}
+                            expandTimeSheet={handleExpandTimeSheet}
+                        />
+                    ))}
+                </LeftSideContainer>
+            </PageContainer>
+        );
+    } else {
+        return (
+            <PageContainer>
+                <LeftSideContainer
+                    user={user}
+                    headerText='Uppdrag'
+                    refreshAssignments={fetchAssignments}
+                >
+                    {assignments.map((assignment) => (
+                        <Assignments
+                            key={assignment.Id}
+                            assignment={assignment}
+                            cardClick={handleCardClick}
+                            selected={activeAssignment?.Id === assignment.Id}
+                            refreshAssignments={fetchAssignments}
+                            expandTimeSheet={handleExpandTimeSheet}
+                        />
+                    ))}
+                </LeftSideContainer>
+                <RightSideContainer
+                    headerText='Aktiv'
+                    assignment={assignments}
+                    shouldExpand={shouldExpand}
+                >
+                    {activeAssignment && (
+                        <ActiveAssignment assignment={activeAssignment} />
+                    )}
+                </RightSideContainer>
+            </PageContainer>
+        );
+    }
 }
