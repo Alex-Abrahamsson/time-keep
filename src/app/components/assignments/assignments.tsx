@@ -40,6 +40,9 @@ export default function Assignments({
 
     const handleStart = async (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (assignment.Status === 'Active' || localStatus === 'Active') {
+            return;
+        }
         const assignmentRef = doc(
             db,
             assignment.UserId,
