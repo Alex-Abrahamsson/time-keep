@@ -82,26 +82,33 @@ export default function TimeSheet({ assignment }: ITimeSHeet) {
                                         />
                                     </div>
                                     {last7Days.map((date, idx) => {
-                                        const sum = assignments
+                                        // Hämta alla sessions för denna dag, kategori och kund
+                                        const sessions = assignments
                                             .filter(
                                                 (a) => a.Category === category
                                             )
-                                            .flatMap((a) => a.Sessions)
-                                            .filter(
-                                                (s) =>
-                                                    s.BillableTime &&
-                                                    s.Start &&
-                                                    s.Start.startsWith(date)
-                                            )
-                                            .reduce(
-                                                (acc, s) =>
-                                                    acc + (s.BillableTime ?? 0),
-                                                0
+                                            .flatMap((a) =>
+                                                a.Sessions.filter(
+                                                    (s) =>
+                                                        s.BillableTime &&
+                                                        s.Start &&
+                                                        s.Start.startsWith(date)
+                                                ).map((s) => ({
+                                                    ticketName: a.TicketName,
+                                                    session: s,
+                                                }))
                                             );
+                                        const sum = sessions.reduce(
+                                            (acc, { session }) =>
+                                                acc +
+                                                (session.BillableTime ?? 0),
+                                            0
+                                        );
                                         return (
                                             <div
                                                 key={idx}
                                                 className={Style.weekGridCell}
+                                                onMouseOver={() => console.log( 'Ticket(s) denna cell:', sessions.map((s) => s.ticketName ))}
                                             >
                                                 {sum > 0 ? sum + ' min' : ''}
                                             </div>
