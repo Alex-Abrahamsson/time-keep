@@ -76,6 +76,10 @@ export default function Home() {
             console.error('Fel vid hämtning av uppdrag:', error);
         }
     };
+    
+    useEffect(() => {
+        fetchAssignments();
+    }, [user]);
 
     const handleExpandTimeSheet = () => {
         setShouldExpand(true);
@@ -84,9 +88,7 @@ export default function Home() {
         }, 3000);
     };
 
-    useEffect(() => {
-        fetchAssignments();
-    }, [user]);
+
 
     if (!isAuthenticated || !user) return null;
 
