@@ -1,5 +1,13 @@
 @use '../styles/variables.scss' as v;
 
+:root {
+  --color-active: rgb(0, 190, 0);
+  --color-stopped: rgb(150, 0, 25);
+  --color-paused: rgb(255, 255, 48);
+  --color-unknown: rgb(112, 112, 112);
+  --color-border: gray;
+}
+
 html,
 body {
   max-width: 100vw;

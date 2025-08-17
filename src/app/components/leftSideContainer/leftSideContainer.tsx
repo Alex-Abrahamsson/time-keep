@@ -12,15 +12,17 @@ interface LeftSideContainerProps {
     headerText: string;
     children: React.ReactElement<typeof Assignments>[] | null;
     user: User;
-    refreshAssignments: () => void;
     selectedAssignmentId?: number | null;
+    isLoading: boolean;
+    noActiveAssignments: boolean;
 }
 
 export default function LeftSideContainer({
     headerText,
     children,
     user,
-    refreshAssignments,
+    isLoading,
+    noActiveAssignments
 }: LeftSideContainerProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [useAi, setUseAi] = useState(false);
@@ -47,7 +49,6 @@ export default function LeftSideContainer({
 
     const closeModalAndRefresh = () => {
         setIsModalOpen(false);
-        refreshAssignments();
     };
 
     return (
@@ -105,7 +106,11 @@ export default function LeftSideContainer({
                     </button>
                 </div>
             </div>
-            <div className={Style.leftSideContainerBody}>{children}</div>
+            <div className={Style.leftSideContainerBody}>
+                {isLoading && <div className={Style.Err}>Laddar uppdrag...</div>}
+                {noActiveAssignments && <div className={Style.Err}>Inga aktiva uppdrag.</div>}
+                {children}
+            </div>
             <div className={Style.leftSideContainerFooter}>
                 <button
                     className={Style.leftSideLogoutButton}

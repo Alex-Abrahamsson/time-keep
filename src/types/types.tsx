@@ -1,3 +1,6 @@
+export type AssignmentStatus = 'Active' | 'Stopped' | 'Unknown';
+export type Category = 'Bugg' | 'Utveckling' | 'Konfiguration';
+
 export type AssignmentSession = {
     Start: string;
     End?: string | null;
@@ -9,12 +12,13 @@ export type AssignmentType = {
     UserId: string;
     Costumer: string;
     TicketName: string;
-    Status: string;
+    Status: AssignmentStatus;
     CreatedDate: string;
     Description: string;
     ActualTime: number;
     Sessions: AssignmentSession[];
-    Category: string;
+    Category: Category;
+    Completed?: boolean;
 };
 
 export type UserType = {

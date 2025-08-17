@@ -2,17 +2,21 @@
 
 import React, { useState } from 'react';
 import Style from './assignments.module.scss';
-import { AssignmentSession, AssignmentType } from '@/types/types';
+import {
+    AssignmentSession,
+    AssignmentType,
+    AssignmentStatus,
+} from '@/types/types';
 import ColorDot from '../colorDot/colorDot';
-import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '@/firebase';
 import Image from 'next/image';
+import { getIcon } from '@/app/helpers/helper';
 
 interface AssignmentsProps {
     assignment: AssignmentType;
     cardClick: (id: number) => void;
     selected?: boolean;
-    refreshAssignments?: () => void;
     expandTimeSheet: () => void;
 }
 
@@ -20,22 +24,15 @@ export default function Assignments({
     assignment,
     cardClick,
     selected,
-    refreshAssignments,
     expandTimeSheet,
 }: AssignmentsProps) {
-    const [localStatus, setLocalStatus] = useState(assignment.Status);
+    const [localStatus, setLocalStatus] = useState<AssignmentStatus>(
+        assignment.Status
+    );
+    const [error, setError] = useState<string | null>(null);
 
-    const getIcon = (category: string) => {
-        switch (category) {
-            case 'Bugg':
-                return '/assets/bug.png';
-            case 'Utveckling':
-                return '/assets/code.png';
-            case 'Konfiguration':
-                return '/assets/config.png';
-            default:
-                return '/assets/bug.png';
-        }
+    const calculateBillableTime = (actualMinutes: number): number => {
+        return actualMinutes <= 15 ? 15 : Math.ceil(actualMinutes / 15) * 15;
     };
 
     const handleStart = async (e: React.MouseEvent) => {
@@ -50,13 +47,19 @@ export default function Assignments({
         );
         const now = new Date().toISOString();
         try {
+            setError(null);
             await updateDoc(assignmentRef, {
-                Sessions: arrayUnion({ Start: now, End: null }),
+                Sessions: arrayUnion({
+                    Start: now,
+                    End: null,
+                    BillableTime: null,
+                }),
                 Status: 'Active',
             });
             setLocalStatus('Active');
         } catch (error) {
             console.error('Kunde inte starta session:', error);
+            setError('Kunde inte starta session. Försök igen.');
         }
     };
 
@@ -70,24 +73,18 @@ export default function Assignments({
         );
         const now = new Date().toISOString();
         try {
-            const snap = await getDoc(assignmentRef);
-            if (!snap.exists()) throw new Error('Assignment not found!');
-
-            const data = snap.data();
-            const sessions = data.Sessions || [];
-
+            setError(null);
+            const sessions = [...(assignment.Sessions || [])];
             if (sessions.length > 0) {
                 const lastIndex = sessions.length - 1;
                 const session = sessions[lastIndex];
                 if (!session.End) {
                     session.End = now;
-
                     const start = new Date(session.Start);
                     const end = new Date(session.End);
                     const diffMs = end.getTime() - start.getTime();
                     const diffMin = Math.ceil(diffMs / 60000);
-                    const billable = Math.ceil(diffMin / 15) * 15;
-                    session.BillableTime = billable;
+                    session.BillableTime = calculateBillableTime(diffMin);
                 }
             }
 
@@ -111,15 +108,10 @@ export default function Assignments({
                 Time: totalActualTime,
             });
             setLocalStatus('Stopped');
-            if (refreshAssignments) refreshAssignments();
         } catch (error) {
             console.error('Kunde inte stoppa session:', error);
+            setError('Kunde inte stoppa session. Försök igen.');
         }
-    };
-
-    const handlePause = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        console.log('Pause clicked for assignment', assignment.Id);
     };
 
     return (
@@ -129,6 +121,7 @@ export default function Assignments({
             }`}
             onClick={() => cardClick(assignment.Id)}
         >
+            {error && <div className={Style.error}>{error}</div>}
             <div className={Style.assignmentsHeader}>
                 <div className={Style.icon}>
                     <Image
@@ -171,23 +164,6 @@ export default function Assignments({
                         <rect x='6' y='6' width='12' height='12' />
                     </svg>
                     Stop
-                </button>
-                <button className={Style.PauseButton} onClick={handlePause}>
-                    <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        width='24'
-                        height='24'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        stroke='currentColor'
-                        strokeWidth='2'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                    >
-                        <rect x='6' y='4' width='4' height='16' />
-                        <rect x='14' y='4' width='4' height='16' />
-                    </svg>
-                    Paus
                 </button>
                 <button className={Style.StartButton} onClick={handleStart}>
                     <svg
