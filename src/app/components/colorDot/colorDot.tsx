@@ -1,29 +1,36 @@
-import React from "react";
-import Style from "./colorDot.module.scss";
+'use client';
+
+import React from 'react';
+import Style from './colorDot.module.scss';
+import { AssignmentStatus } from '@/types/types';
 
 interface ColorDotProps {
-    status: string;
+    status: AssignmentStatus;
+    size?: number;
 }
 
-export default function ColorDot({ status }: ColorDotProps) {
-    const getColor = () => {
+export default function ColorDot({ status, size = 20 }: ColorDotProps) {
+    const getColor = (): string => {
         switch (status) {
-            case "Active":
-                return "green";
-            case "Stopped":
-                return "red";
-            case "Paused":
-                return "yellow";
+            case 'Active':
+                return 'var(--color-active, green)';
+            case 'Stopped':
+                return 'var(--color-stopped, red)';
             default:
-                return "gray";
+                return 'var(--color-unknown, gray)';
         }
     };
 
     return (
         <div className={Style.colorDotContainer}>
-            <div 
-                className={Style.colorDot} 
-                style={{ backgroundColor: getColor() }} // Ändrar färg baserat på status
+            <div
+                className={Style.colorDot}
+                style={{
+                    backgroundColor: getColor(),
+                    width: `${size}px`,
+                    height: `${size}px`,
+                }}
+                aria-label={`Status: ${status}`}
             ></div>
         </div>
     );

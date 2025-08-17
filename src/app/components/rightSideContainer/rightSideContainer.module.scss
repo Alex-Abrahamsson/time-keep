@@ -15,7 +15,7 @@
     width: 100%;
     height: 5vh;
     border-bottom: 1px solid v.$border-color;
-    color: white;
+    color: v.$white-pure; // Ändrat från hårdkodad white
 }
 
 .rightSideContainerBody {
@@ -49,6 +49,7 @@
 
 .rightSideRightContainerBody {
     width: 80%;
+    box-shadow: 0 2px 8px -4px v.$border-color;
 }
 
 .rightSideRightContainerBodyCollapsed {
@@ -59,13 +60,13 @@
 .toggleButton {
     width: 32px;
     min-width: 32px;
-    height: auto;
+    height: 48px; // Ökat höjd för bättre klickyta
     position: absolute;
     left: 0;
     top: 50%;
     transform: translate(-100%, -50%);
     background: v.$primary-color;
-    color: #fff;
+    color: v.$white-pure;
     border: none;
     border-radius: 16px 0 0 16px;
     padding: 8px 0;
@@ -73,41 +74,20 @@
     font-size: 1em;
     box-shadow: 0 2px 8px -4px #0002;
     z-index: 20;
-    letter-spacing: 2px;
-    line-height: 1.2;
-    text-align: center;
-    white-space: pre-line;
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
 
-.weekGrid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 4px;
-    margin-top: 8px;
-    width: 95%;
-}
-
-.weekGridCell {
-    background: #fff;
-    border: 1px solid v.$border-color;
-    padding: 8px 4px;
-    text-align: center;
-    border-radius: 4px;
+    &:hover {
+        background: lighten(v.$primary-color, 10%);
+    }
 }
 
 .customerHeader {
     grid-column: 1 / -1;
     margin-top: 1.5em;
     font-size: 1.1em;
-}
-
-.summaryRow {
-    position: sticky;
-    bottom: 0;
-    background: #fafafa;
-    z-index: 2;
-    box-shadow: 0 -2px 8px -4px #0001;
 }
 
 .rightSideContainerFooter {
@@ -118,5 +98,5 @@
     width: 100%;
     height: 5vh;
     border-top: 1px solid v.$border-color;
-    color: white;
+    color: v.$white-pure;
 }

@@ -124,7 +124,6 @@
 }
 
 .StopButton,
-.PauseButton,
 .StartButton {
     display: flex;
     align-items: center;
@@ -153,15 +152,6 @@
 .StopButton:hover {
     background: #ffcccc;
     color: #b71c1c;
-}
-
-.PauseButton {
-    background: #fffbe6;
-    color: v.$warning-color;
-}
-.PauseButton:hover {
-    background: #fff3c0;
-    color: #c49000;
 }
 
 .StartButton {
