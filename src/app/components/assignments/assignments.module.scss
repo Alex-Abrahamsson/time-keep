@@ -10,14 +10,14 @@
     padding: 4px;
     margin: 4px 0 4px 0;
     background-color: v.$border-color;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     border-radius: 8px;
     transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
 
     p {
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
         font-weight: 400;
     }
 }
@@ -87,8 +87,8 @@
         height: 20px;
 
         h4 {
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
             font-weight: 600;
         }
     }
