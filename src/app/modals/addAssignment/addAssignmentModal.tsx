@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AssignmentType, Category } from '@/types/types';
 import { setDoc, doc } from 'firebase/firestore';
@@ -37,7 +36,7 @@ export default function AddAssignmentModal({
     const handleChange = (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >
+        >,
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -55,7 +54,16 @@ export default function AddAssignmentModal({
         setIsLoading(true);
         setError(null);
         try {
-            await setDoc(doc(db, user.uid, formData.Id.toString()), formData);
+            await setDoc(
+                doc(
+                    db,
+                    'userProfiles',
+                    user.uid,
+                    'assignments',
+                    formData.Id.toString(),
+                ),
+                formData,
+            );
             setError(null);
             onClose();
         } catch (error) {
@@ -112,7 +120,7 @@ export default function AddAssignmentModal({
             });
             if (!response.ok) {
                 throw new Error(
-                    `API-anrop misslyckades: ${response.statusText}`
+                    `API-anrop misslyckades: ${response.statusText}`,
                 );
             }
             const data = await response.json();
@@ -126,7 +134,7 @@ export default function AddAssignmentModal({
                 const match = data.text.match(/\{[\s\S]*\}/);
                 if (!match) {
                     throw new Error(
-                        'Ogiltigt AI-svar: Inget JSON-objekt hittades'
+                        'Ogiltigt AI-svar: Inget JSON-objekt hittades',
                     );
                 }
                 aiData = JSON.parse(match[0]);
@@ -138,7 +146,7 @@ export default function AddAssignmentModal({
                 TicketName: aiData.TicketName || '',
                 Description: aiData.Description || '',
                 Category: ['Bugg', 'Utveckling', 'Konfiguration'].includes(
-                    aiData.Category as Category
+                    aiData.Category as Category,
                 )
                     ? aiData.Category
                     : 'Bugg',
@@ -147,7 +155,7 @@ export default function AddAssignmentModal({
             // Kontrollera obligatoriska fält
             if (!aiData.Costumer || !aiData.TicketName || !aiData.Description) {
                 throw new Error(
-                    'Ogiltigt AI-svar: Saknar obligatoriska fält (kundnamn, ticketnamn eller beskrivning)'
+                    'Ogiltigt AI-svar: Saknar obligatoriska fält (kundnamn, ticketnamn eller beskrivning)',
                 );
             }
 
@@ -156,8 +164,14 @@ export default function AddAssignmentModal({
                 ...aiData,
             };
             await setDoc(
-                doc(db, user.uid, newAssignment.Id.toString()),
-                newAssignment
+                doc(
+                    db,
+                    'userProfiles',
+                    user.uid,
+                    'assignments',
+                    newAssignment.Id.toString(),
+                ),
+                newAssignment,
             );
             setError(null);
             onClose();
@@ -166,7 +180,7 @@ export default function AddAssignmentModal({
             setError(
                 error instanceof Error
                     ? error.message
-                    : 'Kunde inte tolka AI-svaret. Försök igen.'
+                    : 'Kunde inte tolka AI-svaret. Försök igen.',
             );
         } finally {
             setIsLoading(false);

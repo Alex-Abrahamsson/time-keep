@@ -27,7 +27,7 @@ export default function Assignments({
     expandTimeSheet,
 }: AssignmentsProps) {
     const [localStatus, setLocalStatus] = useState<AssignmentStatus>(
-        assignment.Status
+        assignment.Status,
     );
     const [error, setError] = useState<string | null>(null);
 
@@ -42,8 +42,10 @@ export default function Assignments({
         }
         const assignmentRef = doc(
             db,
+            'userProfiles',
             assignment.UserId,
-            assignment.Id.toString()
+            'assignments',
+            assignment.Id.toString(),
         );
         const now = new Date().toISOString();
         try {
@@ -68,8 +70,10 @@ export default function Assignments({
         expandTimeSheet();
         const assignmentRef = doc(
             db,
+            'userProfiles',
             assignment.UserId,
-            assignment.Id.toString()
+            'assignments',
+            assignment.Id.toString(),
         );
         const now = new Date().toISOString();
         try {
@@ -99,7 +103,7 @@ export default function Assignments({
                     }
                     return sum;
                 },
-                0
+                0,
             );
 
             await updateDoc(assignmentRef, {
