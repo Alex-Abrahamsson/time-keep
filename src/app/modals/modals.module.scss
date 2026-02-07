@@ -73,6 +73,18 @@
     }
 }
 
+.errorMessage {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .modalActions {
     display: flex;
     justify-content: space-evenly;

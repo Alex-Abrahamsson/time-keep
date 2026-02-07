@@ -1,86 +1,73 @@
 'use client';
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Style from "./loginPage.module.scss";
-import TicketButton from "../components/ticketButton/ticketButton";
-import { db } from "../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { UserType } from "@/types/types";
-import { useAuth } from "@/context/authContext";
-import NewUserModal from "../modals/newUserModal";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Style from './loginPage.module.scss';
+import { useAuth } from '@/context/authContext';
 
 export default function Login() {
-  const router = useRouter();
-  const { login } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+    const router = useRouter();
+    const { signInWithGoogle } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-  const handleLogin = async () => {
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        setError('');
 
-    try {
-      const usersRef = collection(db, "Users");
-      const q = query(usersRef, where("Name", "==", username));
-      const querySnapshot = await getDocs(q);
+        try {
+            await signInWithGoogle();
+            // Redirect sker automatiskt via page.tsx när user finns
+            router.push('/');
+        } catch (error: unknown) {
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : 'Inloggningen misslyckades',
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      if (querySnapshot.empty) {
-        alert("Fel användarnamn");
-        return;
-      }
+    return (
+        <div className={Style.loginPage}>
+            <div className={Style.loginCard}>
+                <h1>TimeKeep</h1>
+                <p className={Style.subtitle}>Håll koll på din tid</p>
 
-      const userDoc = querySnapshot.docs[0];
-      const userData = userDoc.data() as UserType;
+                {error && <div className={Style.errorMessage}>{error}</div>}
 
-      if (userData.Password !== password) {
-        alert("Fel lösenord");
-        return;
-      }
+                <button
+                    className={Style.googleButton}
+                    onClick={handleGoogleSignIn}
+                    disabled={loading}
+                >
+                    <svg className={Style.googleIcon} viewBox='0 0 24 24'>
+                        <path
+                            fill='#4285F4'
+                            d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
+                        />
+                        <path
+                            fill='#34A853'
+                            d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'
+                        />
+                        <path
+                            fill='#FBBC05'
+                            d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'
+                        />
+                        <path
+                            fill='#EA4335'
+                            d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'
+                        />
+                    </svg>
+                    {loading ? 'Loggar in...' : 'Fortsätt med Google'}
+                </button>
 
-      login({
-        uid: userDoc.id,
-        name: userData.Name,
-        email: userData.Email,
-        role: userData.Role,
-      });
-
-      router.push("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Något gick fel vid inloggning.");
-    }
-  };
-
-  const handleRegisterUser = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  }
-
-  return (
-    <div className={Style.loginPage}>
-      <div className={Style.loginCard}>
-        <h1>Logga in</h1>
-        <input
-          type="text"
-          placeholder="Användarnamn"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Lösenord"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <TicketButton onClick={() => handleLogin()} color="white" text="Logga in" />
-        <div className={Style.registerLink}>
-          <p><a onClick={() => handleRegisterUser()}>Skapa konto</a></p>
+                <p className={Style.infoText}>
+                    Ditt konto skapas automatiskt vid första inloggningen
+                </p>
+            </div>
         </div>
-      </div>
-      {isModalOpen && < NewUserModal onClose={closeModal} />}
-    </div>
-  );
+    );
 }

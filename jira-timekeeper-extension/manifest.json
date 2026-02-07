@@ -1,0 +1,43 @@
+{
+    "manifest_version": 3,
+    "name": "Jira → TimeKeep",
+    "description": "Lägg till Jira-tickets direkt i TimeKeep med ett knapptryck",
+    "version": "1.0.0",
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon48.png",
+        "default_title": "Lägg till i TimeKeep"
+    },
+    "permissions": ["activeTab", "storage"],
+    "host_permissions": [
+        "https://*.atlassian.net/*",
+        "http://localhost:3000/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.atlassian.net/browse/*",
+                "https://*.atlassian.net/jira/servicedesk/*"
+            ],
+            "js": ["content.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Alt+T",
+                "mac": "Command+T"
+            },
+            "description": "Lägg till Jira-ticket i TimeKeep"
+        }
+    }
+}
