@@ -31,9 +31,9 @@ async function loadSettings() {
         if (data.apiUrl) {
             document.getElementById('api-url-input').value = data.apiUrl;
         } else {
-            // Default URL
+            // Default URL - Firebase Hosting
             document.getElementById('api-url-input').value =
-                'http://localhost:3000';
+                'https://time-keeper-abra.web.app';
         }
 
         console.log('TimeKeep: Inställningar laddade', {

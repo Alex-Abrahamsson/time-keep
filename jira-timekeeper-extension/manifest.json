@@ -16,7 +16,9 @@
     "permissions": ["activeTab", "storage"],
     "host_permissions": [
         "https://*.atlassian.net/*",
-        "http://localhost:3000/*"
+        "http://localhost:3000/*",
+        "https://time-keeper-abra.web.app/*",
+        "https://time-keeper-abra.firebaseapp.com/*"
     ],
     "content_scripts": [
         {
