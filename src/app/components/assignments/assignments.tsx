@@ -15,16 +15,16 @@ import { getIcon } from '@/app/helpers/helper';
 
 interface AssignmentsProps {
     assignment: AssignmentType;
-    cardClick: (id: number) => void;
+    cardClickAction: (id: number) => void;
     selected?: boolean;
-    expandTimeSheet: () => void;
+    expandTimeSheetAction: () => void;
 }
 
 export default function Assignments({
     assignment,
-    cardClick,
+    cardClickAction,
     selected,
-    expandTimeSheet,
+    expandTimeSheetAction,
 }: AssignmentsProps) {
     const [localStatus, setLocalStatus] = useState<AssignmentStatus>(
         assignment.Status,
@@ -67,7 +67,7 @@ export default function Assignments({
 
     const handleStop = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        expandTimeSheet();
+        expandTimeSheetAction();
         const assignmentRef = doc(
             db,
             'userProfiles',
@@ -123,7 +123,7 @@ export default function Assignments({
             className={`${Style.assignmentsContainer} ${
                 selected ? Style.selected : ''
             }`}
-            onClick={() => cardClick(assignment.Id)}
+            onClick={() => cardClickAction(assignment.Id)}
         >
             {error && <div className={Style.error}>{error}</div>}
             <div className={Style.assignmentsHeader}>

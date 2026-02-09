@@ -6,7 +6,6 @@ import ActiveAssignment from './components/activeAssignment/activeAssignment';
 import Assignments from './components/assignments/assignments';
 import LeftSideContainer from './components/leftSideContainer/leftSideContainer';
 import PageContainer from './components/page/pageContainer';
-import CustomFooter from './components/footer/customFooter';
 import RightSideContainer from './components/rightSideContainer/rightSideContainer';
 import { useRouter } from 'next/navigation';
 import {
@@ -180,9 +179,9 @@ export default function Home() {
                         <Assignments
                             key={assignment.Id}
                             assignment={assignment}
-                            cardClick={handleCardClick}
+                            cardClickAction={handleCardClick}
                             selected={activeAssignment?.Id === assignment.Id}
-                            expandTimeSheet={handleExpandTimeSheet}
+                            expandTimeSheetAction={handleExpandTimeSheet}
                         />
                     ))}
                 </LeftSideContainer>
@@ -201,9 +200,9 @@ export default function Home() {
                         <Assignments
                             key={assignment.Id}
                             assignment={assignment}
-                            cardClick={handleCardClick}
+                            cardClickAction={handleCardClick}
                             selected={activeAssignment?.Id === assignment.Id}
-                            expandTimeSheet={handleExpandTimeSheet}
+                            expandTimeSheetAction={handleExpandTimeSheet}
                         />
                     ))}
                 </LeftSideContainer>
@@ -215,7 +214,7 @@ export default function Home() {
                     {activeAssignment && (
                         <ActiveAssignment
                             assignment={activeAssignment}
-                            onFinish={handleFinishAssignment}
+                            onFinishAction={handleFinishAssignment}
                             isFinishing={isFinishing}
                         />
                     )}

@@ -6,13 +6,13 @@ import { AssignmentType } from '@/types/types';
 
 interface ActiveAssignmentProps {
     assignment: AssignmentType;
-    onFinish: (assignmentId: number) => void;
+    onFinishAction: (assignmentId: number) => void;
     isFinishing?: boolean;
 }
 
 export default function ActiveAssignment({
     assignment,
-    onFinish,
+    onFinishAction,
     isFinishing,
 }: ActiveAssignmentProps) {
     const latestSession = assignment.Sessions?.[assignment.Sessions.length - 1];
@@ -73,7 +73,7 @@ export default function ActiveAssignment({
                     {totalBillableTime} min
                 </p>
                 <button
-                    onClick={() => onFinish(assignment.Id)}
+                    onClick={() => onFinishAction(assignment.Id)}
                     className={Style.finishAssignmentButton}
                 >
                     Avsluta uppdrag
