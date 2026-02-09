@@ -1,7 +1,6 @@
 // Popup logic för TimeKeep Extension
 
 let ticketData = null;
-let currentScreen = 'main';
 
 // Kör när popup öppnas
 document.addEventListener('DOMContentLoaded', async () => {
@@ -207,11 +206,11 @@ async function addTicket(startTimer) {
         const assignment = {
             Id: Date.now(),
             UserId: userId,
-            Costumer: ticketData.project || 'Okänd kund',
-            TicketName: `${ticketData.key}: ${ticketData.summary}`,
+            Costumer: ticketData.customer || 'Okänd kund',
+            TicketName: ticketData.key,
             Status: startTimer ? 'Active' : 'Stopped',
             CreatedDate: new Date().toISOString(),
-            Description: ticketData.description || '',
+            Description: ticketData.summary || '', /*ticketData.description*/
             ActualTime: 0,
             Sessions: startTimer
                 ? [

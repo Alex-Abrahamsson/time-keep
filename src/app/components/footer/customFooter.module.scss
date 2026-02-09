@@ -6,20 +6,18 @@
     align-items: center;
     justify-items: center;
     justify-content: center;
-    height: 10%;
     width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    height: 5vh;
+    // position: fixed;
+    // bottom: 0;
+    // left: 0;
     z-index: 1000;
 }
 
-.footerContent {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    justify-self: center;
-    width: 95%;
-    height: 95%;
+.footerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: v.$white-pure;
 }

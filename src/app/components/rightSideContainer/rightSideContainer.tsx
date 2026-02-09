@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Style from './rightSideContainer.module.scss';
 import { AssignmentType } from '@/types/types';
 import TimeSheet from '../timeSheet/timeSheet';
+import CustomFooter from "@/app/components/footer/customFooter";
 
 interface RightSideContainerProps {
     headerText: string; // Kan göras striktare om specifika värden används
@@ -89,13 +90,7 @@ export default function RightSideContainer({
                     ) : null}
                 </div>
             </div>
-            <div
-                className={Style.rightSideContainerFooter}
-                role='contentinfo'
-                aria-label='Sidfot för högerpanelen'
-            >
-                <p>© 2025 AbraCode</p>
-            </div>
+            <CustomFooter />
         </div>
     );
 }

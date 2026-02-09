@@ -9,7 +9,8 @@
     width: 400px;
     padding: 0px;
     margin: 0px;
-    border-right: 1px solid gray;
+    // border-right: 1px solid v.$border-color;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.6);
 }
 
 .leftSideContainerHeader {
@@ -18,8 +19,8 @@
     justify-content: center;
     width: 100%;
     height: 5vh;
-    border-bottom: 1px solid gray;
     color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
 
     h1 {
         margin: 0;
@@ -30,7 +31,7 @@
 .leftSideContainerBody {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     justify-items: center;
     text-align: center;
@@ -46,22 +47,36 @@
     justify-items: center;
     width: 100%;
     height: 5vh;
-    border-top: 1px solid gray;
-    color: white;
 }
 
 .leftSideLogoutButton {
     display: flex;
     margin: 0px;
-    padding: 6px;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background-color: red;
-    border-radius: 8px;
-    width: 80%;
-    color: white;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    color: v.$background-color;
     border: none;
+    transition: all 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+
+  &:hover:not(:disabled) {
+    box-shadow: -10px -5px 10px rgba(150, 150, 150, 0.6);
+    color: v.$white-pure;
+  }
+
+  &:active:not(:disabled) {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 .Err {

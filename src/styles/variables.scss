@@ -6,7 +6,9 @@ $background-color: #b4b4b4;
 $success-color: #28a745;
 $error-color: #dc3545;
 $warning-color: #ffc107;
-$border-color: #b3b3b3;
+$border-color: rgba(118, 118, 118, 0.5);
+$dimmed-color: rgba(150, 150, 150, 0.5);
+$hover-color: rgba(200, 200, 200, 0.8);
 
 // Kritvit och pappersvit
 $white-paper: #f9f9f9;
@@ -21,4 +23,7 @@ $white-pure: #ffffff;
   warning-color: $warning-color;
   white-paper: $white-paper;
   white-pure: $white-pure;
+  border-color: $border-color;
+  dimmed-color: $dimmed-color;
+  hover-color: $hover-color;
 }

@@ -175,6 +175,33 @@ function extractJiraTicket() {
             }
         }
 
+        // Hämta kund (via label-JQL-länk)
+        let customer = '';
+        const customerSelectors = [
+            'a[href*="jql=labels"]',           // ✅ Primär (din Jira)
+            '[data-testid="issue.views.field.labels"] a', // fallback
+            '#labels-val a',                   // legacy Jira
+            '[data-test-id*="labels"] a',      // generell fallback
+        ];
+
+        for (const selector of customerSelectors) {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length) {
+                const customers = [...elements]
+                    .map(el => el.innerText.trim())
+                    .filter(Boolean);
+
+                console.log('TimeKeep: Hittade kund-labels:', customers);
+
+                customer = customers[0] || '';
+                break;
+            }
+        }
+
+        if (!customer) {
+            console.warn('TimeKeep: ⚠️ Kunde inte hitta kund');
+        }
+
         const ticketData = {
             key: ticketKey,
             summary: summary,
@@ -182,6 +209,7 @@ function extractJiraTicket() {
             project: projectName,
             issueType: issueType,
             assignee: assignee,
+            customer: customer,
             url: window.location.href,
         };
 
@@ -205,6 +233,7 @@ function extractJiraTicket() {
             project: '',
             issueType: '',
             assignee: '',
+            customer: '',
             url: window.location.href,
             error: error.message,
         };
