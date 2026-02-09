@@ -25,11 +25,18 @@ export default function ActiveAssignment({
           )
         : 0;
 
+    const handleTicketNameClick = (path: string) => {
+        window.open(path, "_blank", "noopener,noreferrer");
+    };
+
+
     return (
         <div
             className={`${Style.activeAssignmentContainer} ${isFinishing ? Style.fadeOut : ''}`}>
             <div className={Style.activeAssignmentHeader}>
-                <h1>{assignment.TicketName}</h1>
+                <button className={Style.ticketButton} onClick={() => handleTicketNameClick(assignment.TicketURL)}>
+                    <h1>{assignment.TicketName}</h1>
+                </button>
             </div>
             <div className={Style.activeAssignmentBody}>
                 <div className={Style.activeAssignmentInfo}>

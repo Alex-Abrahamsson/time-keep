@@ -19,6 +19,7 @@ export type AssignmentType = {
     Sessions: AssignmentSession[];
     Category: Category;
     Completed?: boolean;
+    TicketURL: string;
 };
 
 export type UserType = {

@@ -23,8 +23,7 @@ export default function Home() {
     const [isMobile] = useIsMobile();
 
     const [assignments, setAssignments] = useState<AssignmentType[]>([]);
-    const [activeAssignment, setActiveAssignment] =
-        useState<AssignmentType | null>(null);
+    const [activeAssignment, setActiveAssignment] = useState<AssignmentType | null>(null);
     const [isFinishing, setIsFinishing] = useState(false);
     const [shouldExpand, setShouldExpand] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +81,7 @@ export default function Home() {
                             ),
                             Category: data.Category,
                             Completed: !!data.Completed,
+                            TicketURL: data.JiraUrl,
                         };
                     })
                     .filter((a) => !a.Completed);
