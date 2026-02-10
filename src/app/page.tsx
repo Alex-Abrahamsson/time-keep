@@ -44,66 +44,81 @@ export default function Home() {
     }, [user]);
 
     useEffect(() => {
-        if (!user) {
+        if (!user?.uid) {
             setIsLoading(false);
             return;
         }
 
         setIsLoading(true);
+
+        const assignmentsCollection = collection(
+            db,
+            'userProfiles',
+            user.uid,
+            'assignments'
+        );
+
         const unsubscribe = onSnapshot(
-            collection(db, 'userProfiles', user.uid, 'assignments'),
+            assignmentsCollection,
             (snapshot) => {
+                console.log("Snapshot triggades! Antal dokument:", snapshot.size);
+                console.log("Första dokumentets status:", snapshot.docs[0]?.data()?.Status);
                 const fetchedAssignments: AssignmentType[] = snapshot.docs
                     .map((docSnap) => {
                         const data = docSnap.data();
-                        const validStatus: AssignmentStatus = [
-                            'Active',
-                            'Stopped',
-                            'Unknown',
-                        ].includes(data.Status)
-                            ? data.Status
-                            : 'Unknown';
+
+                        // Säkrare status-hantering
+                        const status = data.Status as AssignmentStatus;
+                        const validStatus: AssignmentStatus =
+                            ['Active', 'Stopped', 'Unknown'].includes(status)
+                                ? status
+                                : 'Unknown';
+
                         return {
-                            Id: Number(data.Id),
+                            Id: Number(docSnap.id),           // ← Använd doc.id istället för data.Id
                             UserId: data.UserId,
-                            Costumer: data.Costumer,
-                            TicketName: data.TicketName,
+                            Costumer: data.Costumer || '',
+                            TicketName: data.TicketName || '',
                             Status: validStatus,
-                            CreatedDate: data.Date,
-                            Description: data.Description,
-                            ActualTime: data.Time,
-                            Sessions: (data.Sessions || []).map(
-                                (s: AssignmentSession) => ({
-                                    Start: s.Start,
-                                    End: s.End ?? null,
-                                    BillableTime: s.BillableTime ?? null,
-                                }),
-                            ),
-                            Category: data.Category,
+                            CreatedDate: data.CreatedDate || data.Date,
+                            Description: data.Description || '',
+                            ActualTime: data.Time ?? 0,
+                            Sessions: (data.Sessions || []).map((s: AssignmentSession) => ({
+                                Start: s.Start || '',
+                                End: s.End ?? null,
+                                BillableTime: s.BillableTime ?? null,
+                            })),
+                            Category: data.Category || '',
                             Completed: !!data.Completed,
-                            TicketURL: data.JiraUrl,
+                            TicketURL: data.JiraUrl || '',
                         };
                     })
-                    .filter((a) => !a.Completed);
+                    .filter((a) => !a.Completed)
+                    // Valfritt: sortera här om du vill ha en fast ordning
+                    .sort((a, b) => b.CreatedDate.localeCompare(a.CreatedDate)); // nyast först t.ex.
 
                 setAssignments(fetchedAssignments);
-                setActiveAssignment((prev) =>
-                    prev
-                        ? fetchedAssignments.find((a) => a.Id === prev.Id) ||
-                          fetchedAssignments[0] ||
-                          null
-                        : fetchedAssignments[0] || null,
-                );
+
+                // Uppdatera activeAssignment smartare
+                setActiveAssignment((prev) => {
+                    if (!prev) {
+                        return fetchedAssignments[0] || null;
+                    }
+                    // Behåll samma om den fortfarande finns
+                    const stillExists = fetchedAssignments.find(a => a.Id === prev.Id);
+                    return stillExists || fetchedAssignments[0] || null;
+                });
+
                 setIsLoading(false);
             },
             (error) => {
                 console.error('Fel vid hämtning av uppdrag:', error);
                 setIsLoading(false);
-            },
+            }
         );
 
-        return () => unsubscribe(); // Rensa upp lyssnaren
-    }, [user]);
+        return () => unsubscribe();
+    }, [user?.uid]);
 
     // Visa loading-state medan Firebase Auth laddar
     if (authLoading || isLoading) {
@@ -174,6 +189,7 @@ export default function Home() {
                     headerText='Uppdrag'
                     isLoading={isLoading}
                     noActiveAssignments={assignments.length === 0}
+                    isMobile={isMobile}
                 >
                     {assignments.map((assignment) => (
                         <Assignments
@@ -195,6 +211,7 @@ export default function Home() {
                     headerText='Uppdrag'
                     isLoading={isLoading}
                     noActiveAssignments={assignments.length === 0}
+                    isMobile={isMobile}
                 >
                     {assignments.map((assignment) => (
                         <Assignments

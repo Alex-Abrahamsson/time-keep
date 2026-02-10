@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Style from './assignments.module.scss';
+import { showWorkStatusNotification } from "@/lib/notifications";
 import {
     AssignmentSession,
     AssignmentType,
@@ -31,15 +32,21 @@ export default function Assignments({
     );
     const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        setLocalStatus(assignment.Status);
+    }, [assignment.Status]);
+
     const calculateBillableTime = (actualMinutes: number): number => {
         return actualMinutes <= 15 ? 15 : Math.ceil(actualMinutes / 15) * 15;
     };
 
     const handleStart = async (e: React.MouseEvent) => {
         e.stopPropagation();
+
         if (assignment.Status === 'Active' || localStatus === 'Active') {
             return;
         }
+
         const assignmentRef = doc(
             db,
             'userProfiles',
@@ -47,9 +54,12 @@ export default function Assignments({
             'assignments',
             assignment.Id.toString(),
         );
+
         const now = new Date().toISOString();
+
         try {
             setError(null);
+
             await updateDoc(assignmentRef, {
                 Sessions: arrayUnion({
                     Start: now,
@@ -58,7 +68,12 @@ export default function Assignments({
                 }),
                 Status: 'Active',
             });
+
             setLocalStatus('Active');
+
+            // 🔔 VISA STATUS-NOTIS
+            await showWorkStatusNotification(assignment.TicketName, "Aktiv");
+
         } catch (error) {
             console.error('Kunde inte starta session:', error);
             setError('Kunde inte starta session. Försök igen.');
@@ -112,6 +127,8 @@ export default function Assignments({
                 Time: totalActualTime,
             });
             setLocalStatus('Stopped');
+            // 🔔 VISA STATUS-NOTIS
+            await showWorkStatusNotification(assignment.TicketName, "Stoppad");
         } catch (error) {
             console.error('Kunde inte stoppa session:', error);
             setError('Kunde inte stoppa session. Försök igen.');

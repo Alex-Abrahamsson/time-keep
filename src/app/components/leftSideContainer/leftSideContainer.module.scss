@@ -7,8 +7,8 @@
     justify-items: center;
     max-height: 100vh;
     width: 400px;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     // border-right: 1px solid v.$border-color;
     box-shadow: 10px 0 20px rgba(0, 0, 0, 0.6);
 }
@@ -51,7 +51,7 @@
 
 .leftSideLogoutButton {
     display: flex;
-    margin: 0px;
+    margin: 0;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -81,4 +81,64 @@
 
 .Err {
     color: white;
+}
+
+// Mobile
+.mobileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  max-height: 100vh;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.mobileHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  height: 7vh;
+  color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+
+  h1 {
+    margin: auto;
+  }
+}
+
+.mobileBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+  width: 100%;
+  height: 93vh;
+}
+
+.mobileLogoutButton {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  padding: 8px;
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.mobileLogoutButton:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.mobileLogoutButton {
+  color: #fff;
 }

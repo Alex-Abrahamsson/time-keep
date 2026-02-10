@@ -14,13 +14,15 @@ interface LeftSideContainerProps {
     selectedAssignmentId?: number | null;
     isLoading: boolean;
     noActiveAssignments: boolean;
+    isMobile: boolean;
 }
 
 export default function LeftSideContainer({
     headerText,
     children,
     isLoading,
-    noActiveAssignments
+    noActiveAssignments,
+    isMobile
 }: LeftSideContainerProps) {
     const { logout } = useAuth();
     const router = useRouter();
@@ -29,6 +31,28 @@ export default function LeftSideContainer({
         logout();
         router.push('/login');
     };
+
+    if(isMobile) {
+        return (
+            <div className={Style.mobileContainer}>
+                <div className={Style.mobileHeader}>
+                    <button
+                        className={Style.mobileLogoutButton}
+                        onClick={handleLogout}
+                        aria-label="Logga ut"
+                    >
+                        ←
+                    </button>
+                    <h1>{headerText}</h1>
+                </div>
+                <div className={Style.mobileBody}>
+                    {isLoading && <div className={Style.Err}>Laddar uppdrag...</div>}
+                    {noActiveAssignments && <div className={Style.Err}>Inga aktiva uppdrag.</div>}
+                    {children}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className={Style.leftSideContainer}>
